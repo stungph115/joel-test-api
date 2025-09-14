@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import compression from 'compression';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,7 +29,15 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  // Swagger setup
+  const config = new DocumentBuilder()
+    .setTitle('Jobs API')
+    .setDescription('API for job management')
+    .setVersion('1.0')
+    .build();
 
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document);
   // Compression middleware
   app.use(compression());
 
